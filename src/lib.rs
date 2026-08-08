@@ -1,5 +1,6 @@
 #![no_std]
 #![forbid(unsafe_code)]
+#![deny(clippy::pedantic)]
 
 use core::ops::Add;
 use core::ops::AddAssign;
@@ -17,7 +18,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
         impl $trait for $T {
             type Output = $T;
 
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(self, rhs: $T) -> Self::Output {
                 $T {
                     inner: $inner_t::$inner_fn(self.inner, rhs.inner),
@@ -28,7 +29,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
         impl $trait<&$T> for $T {
             type Output = $T;
 
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(self, rhs: &$T) -> Self::Output {
                 $T {
                     inner: $inner_t::$inner_fn(self.inner, rhs.inner),
@@ -39,7 +40,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
         impl $trait<$T> for &$T {
             type Output = $T;
 
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(self, rhs: $T) -> Self::Output {
                 $T {
                     inner: $inner_t::$inner_fn(self.inner, rhs.inner),
@@ -50,7 +51,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
         impl<'a> $trait<&'a $T> for &'a $T {
             type Output = $T;
 
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(self, rhs: &$T) -> Self::Output {
                 $T {
                     inner: $inner_t::$inner_fn(self.inner, rhs.inner),
@@ -63,14 +64,14 @@ macro_rules! impl_op_trait_for_ref_combinations {
 macro_rules! impl_op_assign_trait_for_ref_combinations {
     (inner_t: $inner_t:ident, type: $T:ident, trait: $trait:ident, trait_fn: $trait_fn:ident, inner_fn: $inner_fn: ident) => {
         impl $trait for $T {
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(&mut self, rhs: $T) {
                 *self = $T::$inner_fn(*self, rhs);
             }
         }
 
         impl $trait<&$T> for $T {
-            #[inline(always)]
+            #[inline]
             fn $trait_fn(&mut self, rhs: &$T) {
                 *self = $T::$inner_fn(*self, rhs);
             }
@@ -90,6 +91,7 @@ macro_rules! impl_algebraic_float {
         pub type $alias = $af_t;
 
         impl $af_t {
+            #[must_use]
             pub const fn new(inner: $inner_t) -> Self {
                 Self { inner }
             }
