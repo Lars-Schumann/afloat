@@ -14,6 +14,11 @@ use core::ops::RemAssign;
 use core::ops::Sub;
 use core::ops::SubAssign;
 
+pub trait ToAlgebraic {
+    type Output;
+    fn to_algebraic(self) -> Self::Output;
+}
+
 macro_rules! impl_op_trait_for_ref_combinations {
     (inner_t: $inner_t:ident, type: $T:ident, trait: $trait:ident, trait_fn: $trait_fn:ident, inner_fn: $inner_fn: ident) => {
         impl $trait for $T {
@@ -96,6 +101,15 @@ macro_rules! impl_algebraic_float {
             #[inline(always)]
             pub const fn new(inner: $inner_t) -> Self {
                 Self { inner }
+            }
+        }
+
+        impl ToAlgebraic for $inner_t {
+            type Output = $af_t;
+
+            #[inline]
+            fn to_algebraic(self) -> Self::Output {
+                Self::Output::new(self)
             }
         }
 
