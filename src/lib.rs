@@ -82,7 +82,7 @@ macro_rules! impl_op_assign_trait_for_ref_combinations {
 macro_rules! impl_algebraic_float {
     ($inner_t:ident, $af_t:ident, $alias: ident) => {
         #[expect(non_camel_case_types)]
-        #[derive(Clone, Copy, Debug, PartialEq)]
+        #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
         #[repr(transparent)]
         pub struct $af_t {
             inner: $inner_t,
