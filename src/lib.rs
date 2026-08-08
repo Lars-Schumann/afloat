@@ -8,6 +8,7 @@ use core::ops::Div;
 use core::ops::DivAssign;
 use core::ops::Mul;
 use core::ops::MulAssign;
+use core::ops::Neg;
 use core::ops::Rem;
 use core::ops::RemAssign;
 use core::ops::Sub;
@@ -92,6 +93,7 @@ macro_rules! impl_algebraic_float {
 
         impl $af_t {
             #[must_use]
+            #[inline(always)]
             pub const fn new(inner: $inner_t) -> Self {
                 Self { inner }
             }
