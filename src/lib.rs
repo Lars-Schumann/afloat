@@ -108,6 +108,25 @@ macro_rules! impl_algebraic_float {
         impl_op_assign_trait_for_ref_combinations! { inner_t: $inner_t, type: $af_t, trait: MulAssign, trait_fn: mul_assign, inner_fn: mul }
         impl_op_assign_trait_for_ref_combinations! { inner_t: $inner_t, type: $af_t, trait: DivAssign, trait_fn: div_assign, inner_fn: div }
         impl_op_assign_trait_for_ref_combinations! { inner_t: $inner_t, type: $af_t, trait: RemAssign, trait_fn: rem_assign, inner_fn: rem }
+
+        impl Neg for $af_t{
+            type Output = $af_t;
+
+            #[inline]
+            fn neg(self) -> Self::Output {
+                self * const { $af_t::new(-1.0) }
+            }
+        }
+
+        impl Neg for &$af_t{
+            type Output = $af_t;
+
+            #[inline]
+            fn neg(self) -> Self::Output {
+                self * const { $af_t::new(-1.0) }
+            }
+        }
+
     };
 }
 
