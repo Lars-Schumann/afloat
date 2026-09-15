@@ -14,11 +14,6 @@ use core::ops::RemAssign;
 use core::ops::Sub;
 use core::ops::SubAssign;
 
-pub trait ToAlgebraic {
-    type Output;
-    fn to_algebraic(self) -> Self::Output;
-}
-
 macro_rules! impl_op_trait_for_ref_combinations {
     (inner_t: $inner_t:ident, type: $T:ident, trait: $trait:ident, trait_fn: $trait_fn:ident, inner_fn: $inner_fn: ident) => {
         impl $trait for $T {
@@ -26,9 +21,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
 
             #[inline]
             fn $trait_fn(self, rhs: $T) -> Self::Output {
-                $T {
-                    inner: $inner_t::$inner_fn(self.inner, rhs.inner),
-                }
+                $T($inner_t::$inner_fn(self.0, rhs.0))
             }
         }
 
@@ -37,9 +30,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
 
             #[inline]
             fn $trait_fn(self, rhs: &$T) -> Self::Output {
-                $T {
-                    inner: $inner_t::$inner_fn(self.inner, rhs.inner),
-                }
+                $T($inner_t::$inner_fn(self.0, rhs.0))
             }
         }
 
@@ -48,9 +39,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
 
             #[inline]
             fn $trait_fn(self, rhs: $T) -> Self::Output {
-                $T {
-                    inner: $inner_t::$inner_fn(self.inner, rhs.inner),
-                }
+                $T($inner_t::$inner_fn(self.0, rhs.0))
             }
         }
 
@@ -59,9 +48,7 @@ macro_rules! impl_op_trait_for_ref_combinations {
 
             #[inline]
             fn $trait_fn(self, rhs: &$T) -> Self::Output {
-                $T {
-                    inner: $inner_t::$inner_fn(self.inner, rhs.inner),
-                }
+                $T($inner_t::$inner_fn(self.0, rhs.0))
             }
         }
     };
@@ -90,9 +77,7 @@ macro_rules! impl_algebraic_float {
         #[expect(non_camel_case_types)]
         #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
         #[repr(transparent)]
-        pub struct $af_t {
-            inner: $inner_t,
-        }
+        pub struct $af_t(pub $inner_t);
 
         pub type $alias = $af_t;
 
@@ -100,16 +85,7 @@ macro_rules! impl_algebraic_float {
             #[must_use]
             #[inline(always)]
             pub const fn new(inner: $inner_t) -> Self {
-                Self { inner }
-            }
-        }
-
-        impl ToAlgebraic for $inner_t {
-            type Output = $af_t;
-
-            #[inline]
-            fn to_algebraic(self) -> Self::Output {
-                Self::Output::new(self)
+                Self(inner)
             }
         }
 
