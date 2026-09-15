@@ -37,7 +37,7 @@
         };
 
         shellHook = ''
-          export PS1="\[\e[1;33m\][float]\[\e[0m\] $PS1"
+          export PS1="\[\e[1;33m\][afloat]\[\e[0m\] $PS1"
 
           alias msrv="cargo msrv find --linear -- cargo test"
           alias bench="cargo run --package sure_run_bench"
